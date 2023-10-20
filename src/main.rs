@@ -1,6 +1,7 @@
 use lingua::Language::{English, German};
 use lingua::{Language, LanguageDetector, LanguageDetectorBuilder};
 use serde::{Deserialize, Serialize};
+use serde_json::json;
 use std::fs;
 use std::sync::mpsc::channel;
 use std::sync::Arc;
@@ -12,7 +13,8 @@ struct Entry {
     sentence: String,
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let file = fs::read_to_string("result.json").unwrap();
     let cards: Vec<Entry> = serde_json::from_str(&file).unwrap();
     let cards = Arc::new(cards);
@@ -45,5 +47,19 @@ fn main() {
         result.extend(j);
         handle.join().unwrap();
     }
-    println!("{:?}", result);
+    let client = reqwest::Client::new();
+    let body = json!({
+        "version": 6,
+        "action": "deleteNotes",
+        "params": json!({
+            "notes": result
+        })
+    });
+    println!("{:?}", body);
+    let res = client
+        .post("http://127.0.0.1:8765")
+        .body(serde_json::to_string(&body).unwrap())
+        .send()
+        .await;
+    println!("{:?}", res);
 }
