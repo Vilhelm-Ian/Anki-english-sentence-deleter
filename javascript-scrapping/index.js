@@ -21,7 +21,7 @@ async function run(action, params) {
 
 async function final() {
   let result = [];
-  let cards = await run("findCards", { query: "deck:language::german is:new" });
+  let cards = await run("findCards", { query: "deck:language::German is:new" });
   for (let i = 0; i < cards.result.length; i++) {
     try {
       let card_info = await run("cardsInfo", { cards: [cards.result[i]] });

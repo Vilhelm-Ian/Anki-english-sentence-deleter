@@ -4,8 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+futures = "0.3.28"
 lingua = "1.5.0"
-reqwest = "0.11.22"
+reqwest = {version= "0.11.22", features = ["json"]}
 serde = "1.0.189"
 serde_json = "1.0.107"
 tokio = {version= "1.33.0", features = ["full"]}
